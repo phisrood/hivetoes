@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <job id="helloWorldJob"
+         xmlns="http://www.springframework.org/schema/batch">
+        <description>
+            첫 스프링 배치 어플리케이션.
+            콘솔에 로그를 찍고 끝나는 간단한 스텝 예제.
+        </description>
+
+        <step id="helloWorldStep" >
+            <tasklet ref="helloWorldTasklet" />
+        </step>
+    </job>
+
+    <bean id="helloWorldTasklet"
+          class="example1.HelloWorldTasklet" scope="step" />
+
+
+    <!-- Misc Beans -->
+    <!-- 해당 섹션에 있는 빈들은 별도의 xml로 관리하는 것이 좋다.
+        재사용을 위해 나중에 common.xml을 만들어보자. -->
+
+    <bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
+
+    <bean id="jobResultListener"
+          class="example1.listener.JobResultListener" />
+    <bean id="stepListener"
+          class="example1.listener.StepListener" />
+    <bean id="chunkListener"
+          class="example1.listener.ChunkListener" />
+</beans>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:batch="http://www.springframework.org/schema/batch" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="classpath*:/context/context-batch-datasource.xml"/>
+    <import resource="classpath*:/context/context-job-launcher.xml"/>
+
+    <job id="stepCountJob" xmlns="http://www.springframework.org/schema/batch">
+        <step id="helloWorldStep" >
+            <tasklet >
+                <chunk reader="itemReader"
+                       writer="updateCountItemWriter"
+                       commit-interval="4"/>
+            </tasklet>
+        </step>
+    </job>
+
+    <bean id="incrementer" class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
+    <!-- Tasklet -->
+    <bean id="itemReader" class="org.mybatis.spring.batch.MyBatisPagingItemReader"
+          p:sqlSessionFactory-ref="sqlSessionFactory-mysql"
+          p:queryId="Employee.retrieveCustomer"
+          p:pageSize="10000"
+          scope="step"/>
+
+    <util:map id="jobParameters" scope="step">
+        <entry key="stepExecution" value="#{stepExecution}"/>
+    </util:map>
+
+    <bean id="updateCountItemWriter" class="example1.stepCount.UpdateCountItemWriter" >
+        <property name="parameterValues" ref="jobParameters"/>
+        <property name="sqlSessionFactory" ref="sqlSessionFactory-mysql" />
+        <property name="statementId" value="Employee.updateCustomer" />
+    </bean>
+
+</beans>

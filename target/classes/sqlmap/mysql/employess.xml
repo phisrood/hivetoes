@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Employee">
+
+    <select id="retrieveCustomer" parameterType="map" resultType="example1.stepCount.domain.Employee">
+        SELECT * FROM CUSTOMER
+        LIMIT #{_skiprows}, #{_pagesize}
+    </select>
+
+    <update id="updateCustomer" parameterType="example1.stepCount.domain.Employee">
+        UPDATE CUSTOMER SET CREDIT =  CREDIT+5
+        where id='5'
+    </update>
+
+</mapper>

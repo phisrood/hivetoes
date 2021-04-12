@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:batch="http://www.springframework.org/schema/batch" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="classpath*:/context/context-job-launcher.xml"/>
+
+  <!--  <job id="partitionJob" restartable="true" xmlns="http://www.springframework.org/schema/batch">
+        <step id="step">
+            <partition step="step1" partitioner="partitioner">
+                <handler grid-size="4" task-executor="taskExecutor" />
+            </partition>
+        </step>
+    </job>
+
+    <bean id="partitioner" class="example1.partitioner.EgovColumnRangePartitioner">
+    </bean>
+    <step id="step1" xmlns="http://www.springframework.org/schema/batch">
+        <tasklet>
+            <chunk writer="itemWriter" reader="itemReader"  commit-interval="5" />
+            <listeners>
+                <listener ref="fileNameListener" />
+            </listeners>
+        </tasklet>
+    </step>
+
+    <bean id="itemReader" class="org.mybatis.spring.batch.MyBatisPagingItemReader"
+          p:sqlSessionFactory-ref="sqlSessionFactory-orcl"
+          p:queryId="Employee.retrieveCustomer"
+          p:pageSize="4"
+          scope="step"/>
+
+    <bean id="itemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+        <property name="resource" ref="itemReader" />
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="delimiter" value=","/>
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="id,name,credit"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="fileNameListener" class="example1.partitioner.OutputFileListener" scope="step">
+        <property name="path" value="file:./target/test-outputs/partition/db/" />
+    </bean>-->
+</beans>

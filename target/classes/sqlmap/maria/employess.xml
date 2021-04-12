@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Employee">
+
+
+    <insert id="insertEmployees" parameterType="example1.multiThread.domain.Employee">
+            INSERT INTO employees
+            (EMP_NO, BIRTH_DATE, FIRST_NAME, LAST_NAME, GENDER, HIRE_DATE)
+            VALUES
+            (#{empNo}, #{birthDate}, #{firstName}, #{lastName}, #{gender}, #{hireDate})
+            ON DUPLICATE KEY
+            UPDATE GENDER = 'M'
+    </insert>
+
+    <select id="retrieveEmployees" resultType="example1.multiThread.domain.Employee">
+        SELECT * FROM employees LIMIT #{_skiprows}, #{_pagesize}
+    </select>
+</mapper>

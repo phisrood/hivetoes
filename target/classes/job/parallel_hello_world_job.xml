@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <import resource="classpath*:/context/context-batch-datasource.xml"/>
+    <import resource="classpath*:/context/context-job-launcher.xml"/>
+
+    <job id="parallelHelloWorldJob"
+         xmlns="http://www.springframework.org/schema/batch">
+        <split id="split1" task-executor="taskExecutor" next="step4">
+            <flow>
+                <step id="step1" next="step2">
+                    <tasklet ref="helloWorldTasklet1"/>
+                </step>
+                <step id="step2">
+                    <tasklet ref="helloWorldTasklet2"/>
+                </step>
+            </flow>
+            <flow>
+                <step id="step3">
+                    <tasklet ref="helloWorldTasklet3"/>
+                </step>
+            </flow>
+        </split>
+        <step id="step4">
+            <tasklet ref="helloWorldTasklet4"/>
+        </step>
+    </job>
+
+    <bean id="helloWorldTasklet1"
+          class="example1.parellel.HelloWorldTasklet1" scope="step" />
+    <bean id="helloWorldTasklet2"
+          class="example1.parellel.HelloWorldTasklet2" scope="step" />
+    <bean id="helloWorldTasklet3"
+          class="example1.parellel.HelloWorldTasklet3" scope="step" />
+    <bean id="helloWorldTasklet4"
+          class="example1.parellel.HelloWorldTasklet4" scope="step" />
+
+
+    <!-- Misc Beans -->
+    <!-- 해당 섹션에 있는 빈들은 별도의 xml로 관리하는 것이 좋다.
+        재사용을 위해 나중에 common.xml을 만들어보자. -->
+
+    <bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
+
+    <bean id="jobResultListener"
+          class="example1.listener.JobResultListener" />
+    <bean id="stepListener"
+          class="example1.listener.StepListener" />
+    <bean id="chunkListener"
+          class="example1.listener.ChunkListener" />
+</beans>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:batch="http://www.springframework.org/schema/batch" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="classpath*:/context/context-job-launcher.xml"/>
+
+    <job id="hiveToMariaMTH"
+         xmlns="http://www.springframework.org/schema/batch" incrementer="incrementer">
+        <step id="transferEmployees" >
+            <tasklet task-executor="taskExecutor">
+                <chunk reader="itemReader"
+                       processor="itemProcessor"
+                       writer="itemWriter"
+                       commit-interval="1000" />
+            </tasklet>
+        </step>
+    </job>
+
+    <util:map id="datesParameters" scope="step">
+        <entry key="yesterday" value="#{jobExecutionContext['EXTRACTION_START_DATE']}"/>
+        <entry key="today" value="#{jobExecutionContext['TODAY_DATE']}"/>
+        <entry key="first_day_of_the_month" value="#{jobExecutionContext['FIRST_DAY_OF_THE_MONTH_DATE']}"/>
+        <entry key="first_day_of_the_previous_month" value="#{jobExecutionContext['FIRST_DAY_OF_THE_PREVIOUS_MONTH_DATE']}"/>
+    </util:map>
+    <bean id="incrementer" class="org.springframework.batch.core.launch.support.RunIdIncrementer" />
+    <!-- Tasklet -->
+    <bean id="itemReader" class="example1.multiThread.EmployeesItemReader"
+          p:pageSize="1000"
+          scope="step"/>
+
+    <bean id="itemWriter" class="example1.multiThread.EmployeesItemWriter"/>
+
+    <bean id="itemProcessor" class="example1.multiThread.EmployeesInsertProcessor" />
+
+</beans>
